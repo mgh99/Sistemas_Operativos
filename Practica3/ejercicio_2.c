@@ -48,7 +48,7 @@ void *thread2 (void *arg) {
     pthread_exit(NULL);
 }
 
-int main(int argc, char *argv[]) { //PROBLEMA: NO PARA EL SEMAFORO, Y TAMPOCO PARA EL BUFFER
+int main(int argc, char *argv[]) { 
     pthread_t hilo1, hilo2;
     time_t t;
     srandom(time(&t));
