@@ -1,0 +1,9 @@
+Los ficheros en UNIX permiten tanto el acceso directo como el secuencial.
+Cada fichero abierto dispone de un puntero que se mueve con cada lectura o
+escritura. Hay una función especial llamada lseek para posicionar ese puntero
+donde se quiera dentro del fichero.
+Las llamadas al sistema creat y open admiten un parámetro entero en el que se
+especifican los permisos con los que se crea un archivo.
+Los permisos se forman como un número de 9 bits, en el que cada bit representa
+un permiso, tal y como se muestra en el cuadro (es el mismo orden con el que
+aparecen cuando hacemos un ls). s
