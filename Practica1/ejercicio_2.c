@@ -7,50 +7,34 @@
 int main(void) {
 	
 	pid_t childpid1, childpid2;
-	double array[20];
+    int status1, status2;
+    int pares[10], impares[10];
 	
-	childpid1 =fork(); //fork => crea un proceso
-	
-	if (childpid1 == -1) {
+	if ((childpid1 = fork()) == 0) {
+		for(int i = 0; i < 19; i = i + 2) {
+            impares[i/2] = i * i;
+        }	
 		
-		perror("fork  no pudo crear el hijo1");
-		exit(1);		
-		
-	} else if (childpid1 == 0){
-			
-			printf("Soy el hijo1 con (PID %d) y voy a calcular el cuadrado de los pares\n", getpid());
-			for (int i = 0; i < 20; i++) {
-				if (i % 2 == 0) {
-					array[i] = pow(i, 2);
-					printf("%d: %.f, ", i, array[i]);
-					}
-			}		
-			
 	} else {
-		
-		childpid2 = fork();
-		
-		if (childpid2 == -1) {
-			
-			perror("fork no pudo crear el hijo2");
-			exit(1);
-			
-		} else if (childpid2 == 0) {
-			
-			printf("Soy el hijo2 con (PID %d) y voy a calcular el cuadrado de los impares\n", getpid());
-			for (int i = 0; i < 20; i++) {
-				if (i % 2!= 0) {
-					array[i] = pow(i, 2);
-					printf("%d %.f, ", i, array[i]);
-				}
-			}
-		} else {
-			
-			printf("Soy el padre con (PID %d) y voy a esperar a mis hijos\n", getpid());
-			childpid2 = wait(0);
-			childpid1 = wait(0);
-		}
-	}
-	
+        if ((childpid2 = fork()) == 0) {
+            for(int i = 1; i < 20; i = i + 2) {
+                pares[i/2] = i * i;
+            }
+        }else {
+            waitpid(childpid1, &status1, 0);
+            waitpid(childpid2, &status2, 0);
+
+            int complet[20];
+
+            for(int i = 0; i < 20; i++) {
+                if(i % 2 == 0) {
+                    complet[i] = pares[i/2];
+                } else {
+                    complet[i] = impares[i/2];
+                }
+                printf("%d\n", complet[i]);
+            }
+        }
+    }
 	exit(0);
 }

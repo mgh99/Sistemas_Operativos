@@ -19,7 +19,6 @@ int main (int argc, char *argv[]) {
 		}
 	}
 	
-	pid = fork; 
 	pid = fork();
 	printf("Soy el proceso de PID %d y mi padre tiene %d de PID.\n", getpid(), getppid());
 	
