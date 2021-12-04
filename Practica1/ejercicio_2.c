@@ -27,22 +27,22 @@ int main(int argc, char *argv[]){
     } 
     //En caso de que no se creen las pipes lanzamos el mensaje de error
 
-    if((pid1=fork())==0){
+    if((pid1=fork())==0){ 
         //Proceso hijo 1 par 
         close(my_pipe[0]);//El indice 0 de la tuberia indica que es de tipo lectura
         printf("Child %d\n", getpid());//Imprimimos el PID del hijo
 
         int par=2;
         for(int i=0;i<10;i++){
-            Par[i]=par*par;
-            par+=2;
+            Par[i]=par*par; 
+            par+=2; 
         }
 
         write(my_pipe[1],&Impar,sizeof(Impar)+1);//Escribimos en el canal 1 del pipe el array con los resultados
-        exit(EXIT_SUCCESS);
+        exit(EXIT_SUCCESS); 
         
     }else{//Proceso padre
-        if((pid2=fork())==0){
+        if((pid2=fork())==0){ 
             //Proceso hijo 2 impar
             close(my_pipe2[0]);//El indice 0 de la tuberia indica que es de tipo lectura
             printf("Child %d\n", getpid());//Imprimimos el PID del hijo
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
             int impar=1;
             for(int i=0;i<10;i++){ 
                 Impar[i]=impar*impar;    
-                impar+=2;
+                impar+=2; 
             }
 
             write(my_pipe2[1],&Par,sizeof(Par)+1);//Escribimos en el canal 1 del pipe el array con los resultados
@@ -59,20 +59,20 @@ int main(int argc, char *argv[]){
         }else{
             printf("Father%d\n", getpid());//Imprimimos el PID del proceso padre
 
-            waitpid(pid1,&status1,2);
+            waitpid(pid1,&status1,2); 
             close(my_pipe[1]);
 
             waitpid(pid2,&status2,2);
             close(my_pipe2[1])
                 
-            int ParS[10];
+            int ParS[10]; 
             int ImparS[10];
             int Total[20];
 
             //Creamos los arrays que usaremos para leer los datos
             
-            read(my_pipe[0],ImparS,sizeof(ImparS));
-            read(my_pipe2[0],ParS,sizeof(ParS));
+            read(my_pipe1[0],ParS,sizeof(ParS));
+            read(my_pipe2[0],ImparS,sizeof(ImparS)); 
 
             int indexImpar=0;
             int indexPar=0;
@@ -94,4 +94,3 @@ int main(int argc, char *argv[]){
     }
     return 0;
 }
-   
