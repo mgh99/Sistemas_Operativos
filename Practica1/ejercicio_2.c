@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
             par+=2; 
         }
 
-        write(my_pipe[1],&Impar,sizeof(Impar)+1);//Escribimos en el canal 1 del pipe el array con los resultados
+        write(my_pipe[1],&Par,sizeof(Par)+1);//Escribimos en el canal 1 del pipe el array con los resultados
         exit(EXIT_SUCCESS); 
         
     }else{//Proceso padre
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
                 impar+=2; 
             }
 
-            write(my_pipe2[1],&Par,sizeof(Par)+1);//Escribimos en el canal 1 del pipe el array con los resultados
+            write(my_pipe2[1],&Impar,sizeof(Impar)+1);//Escribimos en el canal 1 del pipe el array con los resultados
             exit(EXIT_SUCCESS);
              
         }else{
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
             close(my_pipe[1]);
 
             waitpid(pid2,&status2,2);
-            close(my_pipe2[1])
+            close(my_pipe2[1]);
                 
             int ParS[10]; 
             int ImparS[10];
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 
             //Creamos los arrays que usaremos para leer los datos
             
-            read(my_pipe1[0],ParS,sizeof(ParS));
+            read(my_pipe[0],ParS,sizeof(ParS));
             read(my_pipe2[0],ImparS,sizeof(ImparS)); 
 
             int indexImpar=0;
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
 
             //Creamos unas variables auxiliares para ayudarnos a introducir los datos de los hijos en el Array Total
 
-            for(int i = 0; i < 20;){
+            for(int i = 0; i < 20;){ 
                 Total[i]=ImparS[indexImpar];
                 i++;
                 indexImpar++;
