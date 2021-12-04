@@ -9,7 +9,7 @@
     int Impar[10];
 
 int main(int argc, char *argv[]){
-    
+
     pid_t pid1, pid2;//Creamos los dos procesos hijos
     int status1=0,status2=0;
     int my_pipe[2];
@@ -28,34 +28,34 @@ int main(int argc, char *argv[]){
     //En caso de que no se creen las pipes lanzamos el mensaje de error
 
     if((pid1=fork())==0){
-        //Proceso hijo 1
+        //Proceso hijo 1 par 
         close(my_pipe[0]);//El indice 0 de la tuberia indica que es de tipo lectura
         printf("Child %d\n", getpid());//Imprimimos el PID del hijo
-        int impar=1;
+
+        int par=2;
         for(int i=0;i<10;i++){
-            Impar[i]=impar*impar;    
-            impar+=2;
-        }//Realizamos las operaciones que nos pedia el ejercicio
+            Par[i]=par*par;
+            par+=2;
+        }
 
         write(my_pipe[1],&Impar,sizeof(Impar)+1);//Escribimos en el canal 1 del pipe el array con los resultados
         exit(EXIT_SUCCESS);
         
     }else{//Proceso padre
         if((pid2=fork())==0){
-            //Proceso hijo 2
+            //Proceso hijo 2 impar
             close(my_pipe2[0]);//El indice 0 de la tuberia indica que es de tipo lectura
             printf("Child %d\n", getpid());//Imprimimos el PID del hijo
-            int par=2;
-            for(int i=0;i<10;i++){
-                Par[i]=par*par;
-                par+=2;
-            } //Realizamos las operaciones que nos pedia el ejercicio
+
+            int impar=1;
+            for(int i=0;i<10;i++){ 
+                Impar[i]=impar*impar;    
+                impar+=2;
+            }
+
             write(my_pipe2[1],&Par,sizeof(Par)+1);//Escribimos en el canal 1 del pipe el array con los resultados
-            
-            
             exit(EXIT_SUCCESS);
-            
-        
+             
         }else{
             printf("Father%d\n", getpid());//Imprimimos el PID del proceso padre
 
@@ -64,8 +64,7 @@ int main(int argc, char *argv[]){
 
             waitpid(pid2,&status2,2);
             close(my_pipe2[1])
-            
-           
+                
             int ParS[10];
             int ImparS[10];
             int Total[20];
@@ -95,3 +94,4 @@ int main(int argc, char *argv[]){
     }
     return 0;
 }
+   
