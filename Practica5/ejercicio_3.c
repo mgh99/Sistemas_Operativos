@@ -1,57 +1,81 @@
 #include <stdio.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
 
-static long recursive_search(char *dirname) {
-    
-    DIR *dir = opendir(dirname); 
-    struct dirent *ent; //estructura que contiene los datos de un archivo
-    struct stat st; 
-    long size = 0;
-    long total = 0;
-    char path[1024];
+int total = 0, longitud = 0, *nodos_i = NULL;
 
-    if(dir == 0) { //Si no se puede abrir el directorio
-        exit(-1);
+void anyade (int nodo_i) {
+    if(longitud % 10 == 0) {
+        nodos_i = (int *) realloc (nodos_i, (longitud + 10) * sizeof (int));
     }
-
-    while((ent = readdir(dir)) != NULL) {
-        if((strcmp(ent-> d_name, ".") == 0) || (strcmp(ent-> d_name, "..") == 0)) { //Si es un directorio padre o actual no se procesa o se suma al total
-            continue;
-        }
-
-        printf(path, "%s/%s", dirname, ent-> d_name); //Se concatena el nombre del directorio con el nombre del archivo
-
-        if(lstat(path, &st) != 0) { //Se obtiene la informacion del archivo o directorio
-            continue;
-        }
-
-        size = st.st_size; //Se obtiene el tamaño del archivo o directorio
-
-        if(S_ISDIR(st.st_mode)) {
-            long dir_size = recursive_search(path) + size; //Se llama recursivamente a la funcion para obtener el tamaño del directorio
-            printf("DIR\t");
-            printf("SIZE: %ld\n", dir_size);
-            total += dir_size;
-        }else {
-            total += size;
-            printf("FILES\t");
-            printf("SIZE: %ld\n", size);
-        }
-    }
-    return total;
+    nodos_i[longitud] = nodo_i; //
+    longitud++;
 }
 
-int main(int argc, char *argv[]) {
-    
-    if(argc != 2) { //Gestion de errores
-        perror("Ninguno o mas de un argumento");
+bool esta(int nodo_i) {
+    int num;
+    for(num = 0; num < longitud; num++) {
+        if(nodos_i[num] == nodo_i) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void recorre (char *nombredir) {
+    DIR *dir;
+    struct dirent *entrada;
+    struct stat datos;
+    char *ruta;
+
+    dir = opendir(nombredir);
+
+    if(dir == NULL) {
+        printf("Error al abrir el directorio %s\n", nombredir);
+        return;
     }
 
-    long size = recursive_search(argv[1]); //retorna el tamaño total del directorio
-    printf("Total: size: %ld Bytes\n", size);
+    entrada =  readdir(dir);
+
+    while(entrada != NULL) {
+        if(strcmp (entrada -> d_name, ".") && strcmp (entrada -> d_name, "..")) {
+            ruta = malloc(strlen(nombredir) + strlen(entrada -> d_name) + 2);
+            sprintf (ruta, "%s/%s", nombredir, entrada -> d_name);
+            lstat(ruta, &datos);
+
+            if(S_ISDIR (datos.st_mode)) {
+                recorre(ruta); //llamada recursiva
+            }
+
+            total += datos.st_size;
+
+            if(datos.st_nlink > 1) {
+                if(esta (datos.st_ino) == false) {
+                    anyade(datos.st_ino);
+                }else {
+                    total -= datos.st_size; 
+                }
+            }
+            free(ruta);
+        }
+        entrada = readdir(dir);
+    }
+    closedir(dir);
+}
+
+int main (int argc, char *argv[]) {
+    // if(argc != 2) {
+    //     printf("Debes de especificar un directorio\n");
+    //     exit(1);
+    // }
+
+    recorre("/home/maria/SSOO/Practica5");
+    printf("Total en bytes: %d\n", total);
     return 0;
 }
