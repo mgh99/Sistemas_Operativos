@@ -15,7 +15,7 @@ int main( int argc, char *argv[] ) {
     size_t nbytes = 1000;
     int bytes_leidos;
 
-    if((fd1 = open ("./Practica5/open.txt", O_RDONLY, 444)) == -1) { //abre el archivo en modo lectura y permisos 444 
+    if((fd1 = open ("test", O_RDONLY, 444)) == -1) { //abre el archivo en modo lectura y permisos 444 
         perror("Error al abrir el archivo");
     } else {
         bytes_leidos = read(fd1, buffer, nbytes); //lee el archivo y lo guarda en buffer 
@@ -23,7 +23,7 @@ int main( int argc, char *argv[] ) {
 
     close(fd1); //cierra el archivo
 
-    if((fd2 = open ("./Practica5/test.txt", O_RDWR | O_CREAT, 111)) == -1) { //abre el archivo en modo lectura y permisos 444, crea el archivo si no existe 
+    if((fd2 = open ("open", O_RDWR | O_CREAT, 111)) == -1) { //abre el archivo en modo lectura y permisos 444, crea el archivo si no existe 
         perror("Error al abrir el archivo");
     } else {
         write(fd2, buffer, bytes_leidos); //escribe el archivo en el archivo creado
