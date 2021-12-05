@@ -70,10 +70,6 @@ void recorre (char *nombredir) {
 }
 
 int main (int argc, char *argv[]) {
-    // if(argc != 2) {
-    //     printf("Debes de especificar un directorio\n");
-    //     exit(1);
-    // }
 
     recorre("/home/maria/SSOO/Practica5");
     printf("Total en bytes: %d\n", total);
