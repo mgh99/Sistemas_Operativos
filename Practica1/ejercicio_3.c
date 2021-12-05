@@ -7,17 +7,16 @@
 int main (int argc, char *argv[]) {
 	
 	int num;
-	pid_t pid;
-	
+	pid_t pid;	
 	srandom(getpid());
+    
 	for (num = 0; num < 3; num++) {
 		pid = fork();
 		printf("Soy el proceso de PID %d y mi padre tiene %d de PID.\n", getpid(), getppid());
 		
 		if (pid == 0) {
 			break;
-		}
-		
+		}		
 	}
 	
 	if(pid == 0) {
@@ -26,10 +25,10 @@ int main (int argc, char *argv[]) {
 		for (num = 0; num < 3; num++) {
 			printf ("Fin del proceso de PID %d.\n", wait (NULL));
 		}
-	}
-	
-	return 0;
-	
+	}	
+	return 0;	
 }
+		
+	
 		
 	
