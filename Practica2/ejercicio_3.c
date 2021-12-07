@@ -16,11 +16,11 @@ void *incrementBy2(void *);
 void *incrementBy1(void *);
 
 void *incrementBy2(void *args){
-    pthread_mutex_t* mutex = args; //guardo el parametro mutex pasado.
-    pthread_mutex_lock(mutex);
+    pthread_mutex_t* mutex = args; //args es un puntero a un mutex
+    pthread_mutex_lock(mutex); //bloqueo el mutex
 
     printf("Empieza el hilo 1 -> ");
-    for(int i=0; i < 4; i++){
+    for(int i=0; i < 4; i++){ //incremento globalvar por 2
         globalvar += 2;
         printf("%d, ", globalvar);
     }
@@ -47,11 +47,11 @@ void *incrementBy1(void *args){
 
 int main(void){
 
-    threadmain = pthread_self(); // thread actual
-    pthread_attr_init(&attr);
+    threadmain = pthread_self(); //guardo el id del hilo principal
+    pthread_attr_init(&attr); //inicializo el atributo de los hilos
 
-    pthread_mutex_t mutex;
-    pthread_mutex_init(&mutex, NULL);
+    pthread_mutex_t mutex; 
+    pthread_mutex_init(&mutex, NULL); 
 
     pthread_create(&thread1, &attr, incrementBy1, &mutex); // threadmain crea thread 1 y le pasa el parametro num1
     pthread_create(&thread2, &attr, incrementBy2, &mutex); // threadmain crea thread 2 y le pasa el parametro num2
@@ -60,7 +60,5 @@ int main(void){
     pthread_join(thread2, NULL); //espera a que termine el thread2
 
     printf("Programa terminado.");
-    
-
-     exit(0);
+    exit(0);
 }

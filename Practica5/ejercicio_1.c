@@ -10,7 +10,7 @@ int main() {
 
     int fd;
     char buffer[1000]; 
-    size_t numBytes = 1000;
+    size_t numBytes = 1000; 
     int bytesRead;
 
     if((fd = open("test", O_RDONLY, 444)) == -1) {
@@ -20,8 +20,8 @@ int main() {
     }
 
     printf("\n");
-    for(int i = 99; i <= 108; i++) {
-        printf("%c", buffer[i]);
+    for(int i = 99; i <= 108; i++) { 
+        printf("%c", buffer[i]); 
     }
     printf("\n");
     
